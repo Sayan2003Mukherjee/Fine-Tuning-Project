@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Code Generator using LLM</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f8f9fa;
+      padding: 40px;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      color: #343a40;
+    }
+    .container {
+      width: 100%;
+      max-width: 800px;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    input, textarea, button {
+      font-size: 16px;
+      padding: 10px;
+      width: 100%;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    pre {
+      background: #282c34;
+      color: #61dafb;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin-top: 20px;
+    }
+    .copy-btn {
+      float: right;
+      background: #28a745;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧠 Code Generator using LLM</h1>
+  <div class="container">
+    <label for="promptInput"><strong>Describe your function:</strong></label>
+    <input id="promptInput" placeholder="e.g., Function to calculate factorial of a number" />
+
+    <button onclick="generateCode()">Generate Code</button>
+
+    <pre id="codeOutput" style="display:none;"></pre>
+    <button class="copy-btn" onclick="copyCode()" style="display:none;">📋 Copy Code</button>
+  </div>
+
+  <script>
+    async function generateCode() {
+      const prompt = document.getElementById('promptInput').value;
+      const output = document.getElementById('codeOutput');
+      const copyBtn = document.querySelector('.copy-btn');
+
+      output.style.display = 'block';
+      output.textContent = '⏳ Generating...';
+      copyBtn.style.display = 'none';
+
+      const response = await fetch('/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt })
+      });
+
+      const data = await response.json();
+      output.textContent = data.generated_code;
+      copyBtn.style.display = 'inline-block';
+    }
+
+    function copyCode() {
+      const codeText = document.getElementById('codeOutput').textContent;
+      navigator.clipboard.writeText(codeText);
+      alert('Code copied to clipboard!');
+    }
+  </script>
+
+</body>
+</html>

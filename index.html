@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Code Generator with LLM</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f4f4f4; }
+    textarea, input { width: 100%; margin-top: 10px; padding: 10px; }
+    button { padding: 10px 20px; margin-top: 10px; }
+    pre { background: #eee; padding: 10px; }
+  </style>
+</head>
+<body>
+  <h2>🔧 Code Generator using LLM</h2>
+  <input id="promptInput" placeholder="Describe your function (e.g. 'function to calculate factorial')" />
+  <button onclick="generateCode()">Generate Code</button>
+  <h3>Generated Code:</h3>
+  <pre id="codeOutput"></pre>
+
+  <script>
+    async function generateCode() {
+      const prompt = document.getElementById('promptInput').value;
+      const res = await fetch('/generate', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ prompt })
+      });
+      const data = await res.json();
+      document.getElementById('codeOutput').textContent = data.generated_code;
+    }
+  </script>
+</body>
+</html>
